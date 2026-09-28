@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEONFLIX</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#050308;color:#f7efff;font-family:Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:linear-gradient(#9b31ff22 1px,transparent 1px),linear-gradient(90deg,#9b31ff22 1px,transparent 1px);background-size:35px 35px}
+header{position:sticky;top:0;z-index:20;background:#07040bcc;backdrop-filter:blur(14px);border-bottom:1px solid #8228ad;box-shadow:0 0 25px #9c2dff33}
+nav{max-width:1150px;margin:auto;padding:13px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}.logo{font-size:24px;font-weight:900;letter-spacing:2px;text-shadow:0 0 15px #b52dff}.logo i{color:#c85aff;font-style:normal}
+.search{margin-left:auto;display:flex;min-width:220px;flex:1;max-width:380px}.search input{width:100%;background:#110919;border:1px solid #693080;color:white;padding:11px;border-radius:8px 0 0 8px;outline:none}.search button{border:0;background:#9b2ed1;color:#fff;padding:0 17px;border-radius:0 8px 8px 0}
+.hero{max-width:1150px;margin:20px auto;padding:0 16px}.banner{padding:30px;border:1px solid #b83fff;border-radius:16px;background:linear-gradient(110deg,#08040c,#1a0924,#08040c);box-shadow:0 0 25px #8f28bf44,inset 0 0 35px #9d2fff22}.badge{border:1px solid #c75cff;padding:6px 10px;border-radius:5px;color:#e7c8ff;font-size:11px;letter-spacing:2px}.banner h1{font-size:clamp(30px,7vw,55px);margin:15px 0 8px;text-shadow:0 0 18px #ad32ff}.banner p{color:#bbaec4}
+.tabs{max-width:1150px;margin:auto;padding:0 16px 20px;display:flex;gap:8px;overflow:auto}.tabs button{white-space:nowrap;background:#100817;color:#bfaac8;border:1px solid #512067;padding:9px 14px;border-radius:7px}.tabs .active,.tabs button:hover{color:#fff;border-color:#bb4cff;box-shadow:0 0 12px #a82cce55}
+main{max-width:1150px;margin:auto;padding:0 16px 50px}.title{display:flex;justify-content:space-between;margin:10px 0 14px}.title h2{margin:0;font-size:19px}.title h2:before{content:"";display:inline-block;width:5px;height:19px;background:#bc45ff;vertical-align:-4px;margin-right:8px;box-shadow:0 0 10px #b63dff}.title span{font-size:12px;color:#88778e}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#0d0713;border:1px solid #4c2060;border-radius:10px;overflow:hidden;cursor:pointer;transition:.2s}.card:hover{transform:translateY(-4px);border-color:#bd4cff;box-shadow:0 0 18px #a52ed355}.thumb{height:145px;background:#1a0d22;position:relative;overflow:hidden}.thumb video{width:100%;height:100%;object-fit:cover;pointer-events:none}.play{position:absolute;inset:0;background:#0008;display:grid;place-items:center;opacity:0;transition:.2s}.card:hover .play{opacity:1}.play b{background:#a72fe0;border-radius:50%;width:48px;height:48px;display:grid;place-items:center;box-shadow:0 0 20px #c04fff}.duration{position:absolute;right:7px;bottom:7px;background:#000c;padding:4px 7px;border-radius:4px;font-size:11px}.info{padding:10px}.info strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}.meta{font-size:11px;color:#8d7b95;margin-top:6px}.empty{padding:50px;text-align:center;border:1px dashed #613174;border-radius:12px;color:#9e8da6}
+.modal{display:none;position:fixed;inset:0;z-index:50;background:#000e;align-items:center;justify-content:center;padding:15px}.box{width:min(900px,100%);background:#09050d;border:1px solid #b345ef;border-radius:12px;overflow:hidden;box-shadow:0 0 35px #a52ee977}.top{display:flex;justify-content:space-between;padding:12px 15px;border-bottom:1px solid #4e2162}.close{font-size:24px;color:#d99aff;cursor:pointer}.player{display:block;width:100%;max-height:70vh;background:#000}.caption{padding:13px}.notice{max-width:1150px;margin:auto;padding:0 16px 15px;color:#88768e;font-size:11px}
+@media(max-width:800px){.grid{grid-template-columns:repeat(3,1fr)}.thumb{height:125px}}@media(max-width:560px){.grid{grid-template-columns:repeat(2,1fr);gap:9px}.thumb{height:115px}.search{order:3;flex-basis:100%;max-width:none}.logo{font-size:20px}}
+</style>
+</head>
+<body>
+<header><nav><div class="logo">NEON<i>FLIX</i></div><div class="search"><input id="q" placeholder="Cari video..."><button>⌕</button></div></nav></header>
+<section class="hero"><div class="banner"><span class="badge">PUBLIC VIDEO PLATFORM</span><h1>WATCH. PLAY. EXPLORE.</h1><p>Video yang diupload ke server akan muncul otomatis untuk semua pengunjung.</p></div></section>
+<div class="tabs"><button class="active" data-cat="Semua">Semua</button><button data-cat="Gaming">Gaming</button><button data-cat="Music">Music</button><button data-cat="Tech">Tech</button><button data-cat="Film">Film</button></div>
+<main><div class="title"><h2>Video Terbaru</h2><span id="count">0 video</span></div><div class="grid" id="grid"></div></main>
+<div class="modal" id="modal"><div class="box"><div class="top"><b id="mtitle"></b><span class="close" onclick="closePlayer()">×</span></div><video class="player" id="player" controls playsinline></video><div class="caption" id="mmeta"></div></div></div>
+<div class="notice">Gunakan hanya konten yang kamu miliki atau punya hak untuk ditayangkan.</div>
+<script>
+let all=[],cat="Semua";
+const grid=document.getElementById("grid"),q=document.getElementById("q");
+async function load(){try{const r=await fetch("/api/videos");all=await r.json();render()}catch(e){grid.innerHTML='<div class="empty" style="grid-column:1/-1">Backend belum terhubung.</div>'}}
+function render(){const term=q.value.toLowerCase();const list=all.filter(v=>(cat==="Semua"||v.category===cat)&&v.title.toLowerCase().includes(term));document.getElementById("count").textContent=list.length+" video";grid.innerHTML="";if(!list.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">Belum ada video.</div>';return}list.forEach(v=>{const c=document.createElement("article");c.className="card";c.innerHTML=`<div class="thumb"><video src="/uploads/${encodeURIComponent(v.filename)}" preload="metadata" muted></video><div class="play"><b>▶</b></div></div><div class="info"><strong>${esc(v.title)}</strong><div class="meta">${esc(v.category)} • ${v.views||0} views</div></div>`;c.onclick=()=>openVideo(v);grid.appendChild(c)})}
+function openVideo(v){const p=document.getElementById("player");p.src="/uploads/"+encodeURIComponent(v.filename);document.getElementById("mtitle").textContent=v.title;document.getElementById("mmeta").textContent=v.description||`${v.category} • ${v.views||0} views`;document.getElementById("modal").style.display="flex";p.play().catch(()=>{});fetch("/api/videos/"+v.id+"/view",{method:"POST"}).then(load)}
+function closePlayer(){const p=document.getElementById("player");p.pause();p.removeAttribute("src");document.getElementById("modal").style.display="none"}
+function esc(s=""){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+q.addEventListener("input",render);document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{cat=b.dataset.cat;document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()});load();
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="id"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEONFLIX Admin</title>
+<style>body{font-family:Arial;background:#08040c;color:#fff;max-width:650px;margin:auto;padding:25px}input,select,textarea,button{width:100%;margin:7px 0;padding:12px;background:#12091a;color:#fff;border:1px solid #8c32b6;border-radius:7px}button{background:#9227c7;cursor:pointer}h1{text-shadow:0 0 15px #b52dff}.row{border:1px solid #442052;padding:12px;margin:8px 0;border-radius:8px}</style>
+<h1>NEONFLIX ADMIN</h1>
+<input id="token" type="password" placeholder="ADMIN_TOKEN">
+<input id="title" placeholder="Judul video">
+<select id="category"><option>Film</option><option>Gaming</option><option>Music</option><option>Tech</option></select>
+<textarea id="description" placeholder="Deskripsi"></textarea>
+<input id="video" type="file" accept="video/*">
+<button onclick="upload()">UPLOAD VIDEO</button>
+<p id="status"></p><hr><div id="list"></div>
+<script>
+const $=x=>document.getElementById(x);
+async function upload(){const f=$("video").files[0];if(!f)return $("status").textContent="Pilih video.";const fd=new FormData();fd.append("video",f);fd.append("title",$("title").value);fd.append("category",$("category").value);fd.append("description",$("description").value);$("status").textContent="Mengupload...";const r=await fetch("/api/videos",{method:"POST",headers:{Authorization:"Bearer "+$("token").value},body:fd});const d=await r.json();$("status").textContent=r.ok?"Upload berhasil":"Error: "+(d.error||"gagal");if(r.ok){$("video").value="";load()}}
+async function load(){const r=await fetch("/api/videos"),a=await r.json();$("list").innerHTML=a.map(v=>`<div class=row><b>${v.title}</b><br>${v.category} • ${v.views||0} views<br><button onclick="del('${v.id}')">Hapus</button></div>`).join("")}
+async function del(id){if(!confirm("Hapus video?"))return;const r=await fetch("/api/videos/"+id,{method:"DELETE",headers:{Authorization:"Bearer "+$("token").value}});if(r.ok)load();else alert("Token salah atau gagal")}
+load();
+</script>
